@@ -9,7 +9,35 @@
   	.code16
  	.text
 	.global _start
+	.extern boot_entry
 _start:
+	// 初始化:
+	mov $0, %ax
+	mov %ax, %ds
+	mov %ax, %es
+	mov %ax, %ss
+	mov %ax, %fs
+	mov %ax, %gs
+
+	mov $_start, %esp		// 设置栈顶,@NOTE: 这里简单设置栈顶为0x7c00
+							// 相当于: mov $0x7c00, %esp
+	
+	// 使用软中断打印字符:
+	mov $0xe, %ah
+	mov $'L', %al
+	int $0x10
+
+read_loader:
+	mov $0x8000, %bx		// 读取loader存放的位置
+	mov $0x2, %ah			// AH=02H
+	mov $0x2, %cx			// CH=柱面, CL=扇区
+	mov $64	, %al			// AL=要读取的扇区数
+	mov $0x0080, %dx		// DH=磁头, DL=驱动器 80H~0FFH:硬盘
+	int $0x13				// 读取数据存放到指定位置
+	// 结果: CF=0:操作成功, AH=00H,AL=传输的扇区数, 否则AH=状态码
+	jc read_loader			// 发生错误的时候重试
+
+	jmp boot_entry
 	jmp .
 	
 	// 引导结束段
