@@ -3,12 +3,15 @@
     "cmake.sourceDirectory": "${workspaceFolder}/.",
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
+        "**/.demo/*.json": "jsonc",
+        "*.ui": "D:/tools/msys2/ucrt64/bin/designer-qt6.exe",
         "dirent.h": "c",
         "lib_syscall.h": "c",
         "task.h": "c",
         "types.h": "c",
         "fcntl.h": "c",
-        "_default_fcntl.h": "c"
+        "_default_fcntl.h": "c",
+        "loader.h": "c"
     },
     "workbench.colorCustomizations": {
         "statusBar.foreground": "#ffffff",

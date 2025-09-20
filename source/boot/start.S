@@ -21,11 +21,6 @@ _start:
 
 	mov $_start, %esp		// 设置栈顶,@NOTE: 这里简单设置栈顶为0x7c00
 							// 相当于: mov $0x7c00, %esp
-	
-	// 使用软中断打印字符:
-	mov $0xe, %ah
-	mov $'L', %al
-	int $0x10
 
 read_loader:
 	mov $0x8000, %bx		// 读取loader存放的位置
