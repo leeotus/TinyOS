@@ -3,6 +3,9 @@
 
 #include "comm/boot_info.h"
 #include "comm/types.h"
+#include "comm/cpu_instr.h"
+
+void protected_mode_entry(void);
 
 typedef struct _smap_entry_s {
     uint32_t BaseL;         // base address uint64_t

@@ -10,6 +10,13 @@ __asm__(".code16gcc");
 
 boot_info_t boot_info;      // 启动参数信息
 
+// GDT表
+uint16_t gdt_table[][4] = {
+    {0, 0, 0, 0},
+    {0xffff, 0x0000, 0x9a00, 0x00cf},
+    {0xffff, 0x0000, 0x9200, 0x00cf},
+};
+
 /**
  * @brief 用于在屏幕上显示字符串
  * @param msg 需要打印的字符串数据 
@@ -58,7 +65,7 @@ static void detect_memory(void) {
         );
         if(signature != 0x534d4150) {
             // 检测内存失败
-            show_msg("Failed to detect memory ...\r\n");
+            show_msg("Failed to detect memory ... ");
             return;
         }
         if(bytes > 20 && (entry->ACPI & 0x0001) == 0) {
@@ -78,10 +85,28 @@ static void detect_memory(void) {
     show_msg("ok.\r\n");
 }
 
+/**
+ * @brief 从实模式切换到保护模式
+ */
+static void enter_protected_mode(void) {
+    cli();  // 关中断
+    uint8_t v = inb(0x92);
+    outb(0x92, v | 0x2);
+
+    // 加载GDT
+    lgdt((uint32_t)gdt_table, sizeof(gdt_table));
+
+    uint32_t cr0 = read_cr0();
+    write_cr0(cr0 | (1 << 0));
+
+    // 远跳转指令
+    far_jump(8, (uint32_t)protected_mode_entry);
+}
 
 void loader_entry(void) {
     show_msg("Now loading ...\r\n");
     detect_memory();        // 检测内存容量
+    enter_protected_mode(); // 进入保护模式
     for(;;) {
 
     }

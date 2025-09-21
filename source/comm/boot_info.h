@@ -3,7 +3,9 @@
 
 #include "types.h"
 
-#define BOOT_RAM_REGION_MAX 10
+#define BOOT_RAM_REGION_MAX     10
+#define SECTOR_SIZE             512
+#define SYS_KERNEL_LOAD_ADDR    (1024 * 1024)
 
 typedef struct _boot_info_s boot_info_t;
 
