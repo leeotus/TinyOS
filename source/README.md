@@ -35,7 +35,7 @@ read_loader:
 
 > 另一种方式是boot加载内核, 内核包含原本由boot需要执行的初始化任务
 >
-> )关于x86的int13中断: @ref: [操作系统学习7 x86架构使用INT13中读取软盘数据 -- AI头条](https://zhuanlan.zhihu.com/p/682208424)
+> 关于x86的int13中断: @ref: [操作系统学习7 x86架构使用INT13中读取软盘数据 -- AI头条](https://zhuanlan.zhihu.com/p/682208424)
 
 ## x86寄存器
 
@@ -46,3 +46,5 @@ read_loader:
 ## LB模式读取磁盘
 
 ## ELF文件
+
+> 一些图片来自网络, 如有侵权, 请联系删除
