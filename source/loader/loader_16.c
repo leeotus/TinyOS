@@ -8,7 +8,7 @@ __asm__(".code16gcc");
 
 #include "loader.h"
 
-boot_info_t boot_info;      // 启动参数信息
+boot_info_t boot_info; // 启动参数信息
 
 // GDT表
 uint16_t gdt_table[][4] = {
@@ -49,35 +49,36 @@ static void show_msg(const char *msg) {
  * @ref https://www.zshanjun.com/discussions/250
  */
 static void detect_memory(void) {
-    int i=0;
+    int i = 0;
     SMAP_entry_t smap_entry;
     SMAP_entry_t *entry = &smap_entry;
     uint32_t countID = 0;
     int signature, bytes;
 
     show_msg("Detecting memory ...\r\n");
-    for(i=0; i<BOOT_RAM_REGION_MAX; ++i) {
+    for (i = 0; i < BOOT_RAM_REGION_MAX; ++i) {
         // NOTE "D"(entry)表示把entry的地址放入到edi寄存器中，作为缓存区指针
-        __asm__ __volatile__ (
-            "int $0x15"
-            : "=a"(signature), "=c"(bytes), "=b"(countID)
-            : "a"(0xe820), "b"(countID), "c"(24), "d"(0x534d4150), "D"(entry)
-        );
-        if(signature != 0x534d4150) {
+        __asm__ __volatile__("int $0x15"
+                             : "=a"(signature), "=c"(bytes), "=b"(countID)
+                             : "a"(0xe820), "b"(countID), "c"(24),
+                               "d"(0x534d4150), "D"(entry));
+        if (signature != 0x534d4150) {
             // 检测内存失败
             show_msg("Failed to detect memory ... ");
             return;
         }
-        if(bytes > 20 && (entry->ACPI & 0x0001) == 0) {
+        if (bytes > 20 && (entry->ACPI & 0x0001) == 0) {
             // 忽略
             continue;
         }
-        if(entry->Type == 1) {
-            boot_info.ram_region_cfg[boot_info.ram_region_cnt].start = entry->BaseL;
-            boot_info.ram_region_cfg[boot_info.ram_region_cnt].size = entry->LengthL;
+        if (entry->Type == 1) {
+            boot_info.ram_region_cfg[boot_info.ram_region_cnt].start =
+                entry->BaseL;
+            boot_info.ram_region_cfg[boot_info.ram_region_cnt].size =
+                entry->LengthL;
             boot_info.ram_region_cnt += 1;
         }
-        if(countID == 0) {
+        if (countID == 0) {
             // 读取完毕
             break;
         }
@@ -89,7 +90,7 @@ static void detect_memory(void) {
  * @brief 从实模式切换到保护模式
  */
 static void enter_protected_mode(void) {
-    cli();  // 关中断
+    cli(); // 关中断
     uint8_t v = inb(0x92);
     outb(0x92, v | 0x2);
 
@@ -107,7 +108,6 @@ void loader_entry(void) {
     show_msg("Now loading ...\r\n");
     detect_memory();        // 检测内存容量
     enter_protected_mode(); // 进入保护模式
-    for(;;) {
-
+    for (;;) {
     }
 }
