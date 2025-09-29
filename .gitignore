@@ -41,6 +41,8 @@
 *.su
 *.idb
 *.pdb
+*.bin
+*.txt
 
 # Kernel Module Compile Results
 *.mod*
@@ -57,3 +59,4 @@ build/
 
 # not ready yet
 /include
+/image
