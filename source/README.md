@@ -1,6 +1,6 @@
 # Basis
 
-## BIOS
+## 1. BIOS
 
 BIOS引导程序: 主要用于为操作系统允许初始化环境, 并加载操作系统运行
 
@@ -37,14 +37,38 @@ read_loader:
 >
 > 关于x86的int13中断: @ref: [操作系统学习7 x86架构使用INT13中读取软盘数据 -- AI头条](https://zhuanlan.zhihu.com/p/682208424)
 
-## x86寄存器
+## 2. x86寄存器
 
 > @ref: [x86寄存器总结 -- Frank__Chen](https://www.cnblogs.com/FrankChen831X/p/10482718.html)
 
-## x86实模式和保护模式
+## 3. x86实模式和保护模式
 
-## LB模式读取磁盘
+### 3.1 全局描述符表(GDT, Global Descriptor Table)
 
-## ELF文件
+![gdt.png](../assets/gdt.png)
+
+### 3.2 段选择子(Segment Selector)
+
+![segment-selector.png](../assets/segment-selector.png)
+
+| 位范围(Bit) | 字段名称                     | 长度  | 核心作用                                                                                                           |
+| ----------- | ---------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------ |
+| 0-1         | RPL(Request Privilege Level) | 2 位  | 表示当前请求访问该段的特权级(0-3级, 0级最高, 3级最低), 用于特权级检查                                              |
+| 2           | TI(Table Indicator)          | 1 位  | 指示段描述符所在的表: 0=描述符在GDT(全局描述符表)中; 1=描述符在LDT(局部描述符表)中                                 |
+| 3-15        | Index(描述符索引)            | 13 位 | 用于计算描述符在 GDT/LDT 中的偏移量: 偏移量 = Index×8(因每个段描述符占 8 字节),可索引 8192 个描述符(2¹³ = 8192) |
+
+```assembly
+// source/kernel/cpu/cpu.c
+// selector参数是输入的段选择子
+void segment_desc_set(int selector, uint32_t base, uint32_t limit,
+                      uint16_t attr) {
+    // 这里`(selector >> 3)`右移3位即可以获取段选择子的Index, 从而获取其执行的GDT
+    segment_desc_t *desc = gdt_table + (selector >> 3);
+    ...
+```
+
+## 4. LB模式读取磁盘
+
+## 5. ELF文件
 
 > 一些图片来自网络, 如有侵权, 请联系删除
