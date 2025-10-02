@@ -23,4 +23,3 @@ protected_mode_entry:
 	mov %ax, %gs
 
 	jmp $8, $load_kernel
-	
