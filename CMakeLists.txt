@@ -18,6 +18,7 @@ endif ()
 # C编译器与参数配置
 set(CMAKE_C_COMPILER "${TOOL_PREFIX}gcc") 
 set(CMAKE_C_FLAGS "-g -c -O0 -m32 -fno-pie -fno-stack-protector -fno-asynchronous-unwind-tables")
+set(CMAKE_C_FLAGS_RELEASE "-c -O2 -m32 -fno-pie-fno-stack-protector -fno-asynchronous-unwind-tables -DNDEBUG")
 
 # 汇编器与参数配置
 set(CMAKE_ASM_COMPILER "${TOOL_PREFIX}gcc")
@@ -31,6 +32,7 @@ set(LINKER_TOOL "${TOOL_PREFIX}ld")
 set(OBJCOPY_TOOL "${TOOL_PREFIX}objcopy")
 set(OBJDUMP_TOOL "${TOOL_PREFIX}objdump")
 set(READELF_TOOL "${TOOL_PREFIX}readelf")
+set(CMAKE_BUILD_TYPE Debug)
 
 # 工程，启用C语言和汇编语言
 project(os LANGUAGES C)  
@@ -39,8 +41,8 @@ enable_language(ASM)
 # 头文件搜索路径
 include_directories(
     ${PROJECT_SOURCE_DIR}/source
-#     ${PROJECT_SOURCE_DIR}/source/kernel/include
-    ${PROJECT_SOURCE_DIR}/../newlib/i686-elf/include
+    ${PROJECT_SOURCE_DIR}/source/kernel/include
+    ${PROJECT_SOURCE_DIR}/include/newlib/i686-elf/include
 )
 
 # 底层的若干子项目：含内核及应用程序

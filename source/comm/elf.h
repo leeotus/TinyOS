@@ -13,6 +13,7 @@ typedef uint32_t Elf32_Off;
 typedef uint32_t Elf32_Word;
 
 #pragma pack(1)
+// @file elf布局: assets/elf.png
 typedef struct {
     char e_ident[EI_NIDENT];
     Elf32_Half e_type;

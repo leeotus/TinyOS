@@ -12,7 +12,8 @@
         "fcntl.h": "c",
         "_default_fcntl.h": "c",
         "loader.h": "c",
-        "init.h": "c"
+        "init.h": "c",
+        "cpu.h": "c"
     },
     "workbench.colorCustomizations": {
         "statusBar.foreground": "#ffffff",
